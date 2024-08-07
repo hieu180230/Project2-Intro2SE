@@ -1,6 +1,7 @@
 import time
 from utils import *
 import pygame as pg
+import pygame_menu as pgmenu
 import sys
 from entity import Agent
 
@@ -44,7 +45,6 @@ class Program:
         return result
 
     def draw_board(self):
-        pg.display.get_surface().fill((255, 255, 255))
         for x in range(self.matrix_size):
             for y in range(self.matrix_size):
                 pg.draw.rect(self.screen, (0, 0, 0), [x * self.cell_size, y * self.cell_size, self.cell_size, self.cell_size], 1, border_radius=2)
@@ -69,6 +69,9 @@ class Program:
                 x += word_width + space
             x = 740  # Reset the x.
             y += word_height  # Start on new row.
+            if y >= 600:
+                pg.display.get_surface().fill((255, 255, 255))
+                y = 3
 
     def run(self):
         self.draw_board()
@@ -83,9 +86,9 @@ class Program:
                     pg.quit()
                     sys.exit()
 
+            self.move_log()
             self.draw_board()
             self.player.render(self.screen, self.cell_size)
-            self.move_log()
             time.sleep(1)
             pg.display.update()
             self.clock.tick(60)
