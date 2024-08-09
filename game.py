@@ -5,6 +5,7 @@ import sys
 from entity import Agent
 from pygame.locals import *
 from pygame.locals import *
+import gc
 
 
 DIMENSION = [1080, 720]
@@ -79,6 +80,7 @@ class Program:
     def run(self):
         self.draw_board()
         while True:
+            gc.collect()
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     pg.quit()
