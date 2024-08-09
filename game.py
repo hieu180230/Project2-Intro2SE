@@ -1,27 +1,32 @@
 import time
 from utils import *
 import pygame as pg
-import pygame_menu as pgmenu
 import sys
 from entity import Agent
+from pygame.locals import *
+from pygame.locals import *
+
 
 DIMENSION = [1080, 720]
 
 
 class Program:
     def __init__(self):
+        flags = DOUBLEBUF
+
         pg.init()
         pg.font.init()
         pg.display.set_caption("Intro@SE")
         self.font = pg.font.SysFont('Ariel', 16)
 
         self.log = ""
-        self.screen = pg.display.set_mode((DIMENSION[0], DIMENSION[1]))
+        self.screen = pg.display.set_mode((DIMENSION[0], DIMENSION[1]), flags, 16)
         self.clock = pg.time.Clock()
         self.player = None
         self.map_data = []
         self.matrix_size = 10
         self.cell_size = None
+
 
     def load_map(self, path):
         with open(path, 'r') as f:
@@ -35,7 +40,6 @@ class Program:
                 self.map_data.append(row)
         #find blah blah
         self.agent_init()
-
     def find_position(self, value):
         result = []
         for i in range(self.matrix_size):
@@ -48,7 +52,6 @@ class Program:
         for x in range(self.matrix_size):
             for y in range(self.matrix_size):
                 pg.draw.rect(self.screen, (0, 0, 0), [x * self.cell_size, y * self.cell_size, self.cell_size, self.cell_size], 1, border_radius=2)
-    
     def agent_init(self):
         agent_pos = self.find_position('A')
         self.player = Agent(self,'agent', self.find_position('A')[0], (self.cell_size - 8, self.cell_size - 8), "agent.png")
@@ -75,20 +78,20 @@ class Program:
 
     def run(self):
         self.draw_board()
-        time.sleep(1)
         while True:
-            (new_pos, log) = self.player.move()
-            info = self.map_data[new_pos[0]][new_pos[1]]
-            self.player.update(new_pos, info)
-            self.log += f"{log}\n"
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     pg.quit()
                     sys.exit()
-
-            self.move_log()
-            self.draw_board()
-            self.player.render(self.screen, self.cell_size)
-            time.sleep(1)
+                if event.type == pg.MOUSEBUTTONDOWN:
+                    print("ready")
+                    (new_pos, log) = self.player.move()
+                    info = self.map_data[new_pos[0]][new_pos[1]]
+                    self.player.update(new_pos, info)
+                    self.log += f"{log}\n"
+                    self.move_log()
+                    self.draw_board()
+                    self.player.render(self.screen, self.cell_size)
             pg.display.update()
             self.clock.tick(60)
+

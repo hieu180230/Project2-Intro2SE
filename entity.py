@@ -61,33 +61,33 @@ class Agent:
 
     def generate_move(self):
         return random.choice([0, 1, 2, 3])
+
+    def get_valid_pos(self):
+        action = self.generate_move()
+        new_pos = self.pos
+        new_pos[0] += list(directions[action])[0]
+        new_pos[1] += list(directions[action])[1]
+        if valid_check(new_pos):
+            return (new_pos, action)
+        else:
+            return (None, None)
     def move(self):
         log = f"Current: {self.pos} | Facing {self.facing_dir}\n"
-
-        new_pos = self.pos
-        while True:
-            action = self.generate_move()
-            uncheck_pos = new_pos
-            uncheck_pos[0] += directions[action][0]
-            uncheck_pos[1] += directions[action][1]
-            if valid_check(uncheck_pos):
-                new_pos = uncheck_pos
-                break
+        (new_pos, action) = self.get_valid_pos()
+        while new_pos is None:
+            (new_pos, action) = self.get_valid_pos()
         #print(f"  Action: {action} ")
         if self.facing_dir.value == action:
             log += self.forward(new_pos)
         elif abs(self.facing_dir.value - action) == 2:
             log += self.turn_left()
             log += self.turn_left()
-            log += self.forward(new_pos)
             self.change_direction(action)
         elif self.facing_dir.value - action == -1 or self.facing_dir.value - action == 3:
             log += self.turn_left()
-            log += self.forward(new_pos)
             self.change_direction(action)
         elif self.facing_dir.value - action == 1 or self.facing_dir.value - action == -3:
             log += self.turn_right()
-            log += self.forward(new_pos)
             self.change_direction(action)
         log += f"Current: {self.pos} Facing {self.facing_dir}\n-----move done-------\n"
         return (new_pos, log)
