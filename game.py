@@ -77,7 +77,8 @@ class Program:
             x = 740  # Reset the x.
             y += word_height  # Start on new row.
             if y >= 600:
-                self.draw_board()
+                new_rect = pg.rect.Rect(DIMENSION[0] - 340, 0, 340, DIMENSION[1])
+                pg.draw.rect(self.screen, (255, 255, 255), new_rect)
                 y = 3
 
     def run(self):

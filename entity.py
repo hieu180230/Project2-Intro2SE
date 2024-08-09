@@ -73,12 +73,20 @@ class Agent:
             return (None, None)
     def move(self):
         log = f"Current: {self.pos} | Facing {self.facing_dir}\n"
-        (new_pos, action) = self.get_valid_pos()
-        while new_pos is None:
-            (new_pos, action) = self.get_valid_pos()
+        # (new_pos, action) = self.get_valid_pos()
+        # while new_pos is None:
+        #     (new_pos, action) = self.get_valid_pos()
+        action = self.generate_move()
+        new_pos = self.pos.copy()
         #print(f"  Action: {action} ")
-        if self.facing_dir.value == action:
-            log += self.forward(new_pos)
+        if self.facing_dir.value is action:
+            new_pos[0] += list(directions[action])[0]
+            new_pos[1] += list(directions[action])[1]
+            if valid_check(new_pos):
+                log += self.forward(new_pos)
+                self.pos = new_pos
+            else:
+                log += f"Forward: cannot across border!\n"
         elif abs(self.facing_dir.value - action) == 2:
             log += self.turn_left()
             log += self.turn_left()
@@ -90,4 +98,4 @@ class Agent:
             log += self.turn_right()
             self.change_direction(action)
         log += f"Current: {self.pos} Facing {self.facing_dir}\n-----move done-------\n"
-        return (new_pos, log)
+        return (self.pos, log)
