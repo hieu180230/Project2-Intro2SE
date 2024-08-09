@@ -15,8 +15,10 @@ class Program:
     def __init__(self):
         flags = DOUBLEBUF
 
-        pg.init()
+        #pg.init()
         pg.font.init()
+        pg.display.init()
+        pg.mixer.init()
         pg.display.set_caption("Intro@SE")
         self.font = pg.font.SysFont('Ariel', 16)
 
@@ -50,6 +52,7 @@ class Program:
         return result
 
     def draw_board(self):
+        self.screen.fill((255, 255, 255))
         for x in range(self.matrix_size):
             for y in range(self.matrix_size):
                 pg.draw.rect(self.screen, (0, 0, 0), [x * self.cell_size, y * self.cell_size, self.cell_size, self.cell_size], 1, border_radius=2)
@@ -74,7 +77,7 @@ class Program:
             x = 740  # Reset the x.
             y += word_height  # Start on new row.
             if y >= 600:
-                pg.display.get_surface().fill((255, 255, 255))
+                self.draw_board()
                 y = 3
 
     def run(self):
@@ -91,8 +94,8 @@ class Program:
                     info = self.map_data[new_pos[0]][new_pos[1]]
                     self.player.update(new_pos, info)
                     self.log += f"{log}\n"
-                    self.move_log()
                     self.draw_board()
+                    self.move_log()
                     self.player.render(self.screen, self.cell_size)
             pg.display.update()
             self.clock.tick(60)
