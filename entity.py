@@ -12,9 +12,8 @@ class Compass(Enum):
     WEST = 3
 
 class Agent:
-    def __init__(self, game, type, pos, size, path):
+    def __init__(self, game, pos, size, path):
         self.game = game
-        self.type = type
         self.pos = list(pos)
         self.size = size
         self.cell_info = None
